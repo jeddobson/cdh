@@ -11,12 +11,11 @@
 #
 
 def load_narratives(options="default"):
-
 	import os
 	import csv
 	import nltk
 
-	docsouth_root = "na-slave-narratives/data/"
+	docsouth_root = "../na-slave-narratives/data/"
 	neh_toc = docsouth_root + "toc.csv"
 
 	# construct a list to store the entire archive
@@ -70,9 +69,18 @@ def load_narratives(options="default"):
 #  - removes an additional set of stopwords
 
 def preprocess(text,options="default"):
+
+
 	# default: drop to lowercase and remove non alpha characters
 	pp_text = [word for word in text if word.isalpha() ]
 	pp_text = [word.lower() for word in pp_text]
+
+	# preprocessing function: preserve *ONLY* stopwords
+	if options == "onlystop":
+		from nltk.corpus import stopwords
+		stopwords = stopwords.words('english')
+		pp_text = [word for word in pp_text if word in stopwords]
+		return(pp_text)
         
 	# enable an option for preserving stopwords
 	if options != "nostop":
@@ -83,6 +91,7 @@ def preprocess(text,options="default"):
 		pp_text = [word for word in pp_text if word not in stopwords]
         
 	return(pp_text)
+
 
 
 def stats(text):
