@@ -3,6 +3,8 @@ import csv
 import nltk
 import os, sys
 
+sys.path.append("../lib")
+
 # import textmine library
 import docsouth_utils
 
