@@ -67,44 +67,84 @@ def load_narratives(options="default"):
 #  - converts all words to lowercase
 #  - removes the above 127 NLTK-defined stopwords
 #  - removes an additional set of stopwords
+#  - optionally preserves only stopwords
+#  - optionally stems words
 
-def preprocess(text,options="default"):
+def preprocess(text_object, options = "default"):
+	from nltk.corpus import stopwords
+	stopwords = stopwords.words('english')
 
+	# *step one* (default): drop to lowercase 
+	pp_text = [word.lower() for word in text_object]
 
-	# default: drop to lowercase and remove non alpha characters
-	pp_text = [word for word in text if word.isalpha() ]
-	pp_text = [word.lower() for word in pp_text]
+	# *step two* (default): remove non-alpha characters,
+	# punctuation, and as many other "noise" elements as
+	# possible. If dealing with a single character word, 	
+	# drop non-alphabetical characters. This will remove 
+	# most punctuation but preserve many words containing
+	# marks such as the '-' in 'self-emancipated'
 
-	# preprocessing function: preserve *ONLY* stopwords
+	tmp_text=list()
+	for word in pp_text:
+		if len(word) == 1 :
+			if word.isalpha == True:
+				tmp_text.append(word)
+		else:
+			tmp_text.append(word)		
+	pp_text = tmp_text
+
+	# now remove leading and trailing quotation marks, 	
+	# hyphens and  dashes
+	tmp_text=list()
+	for word in pp_text:
+		drop_list = ['“','"','”','-','—']
+		if word[0] in drop_list:
+			word = word[1:]
+		if word[-1:] in drop_list:
+			word = word[:-1]
+
+		# catch any zero-length words remaining
+		if len(word) > 0:
+			tmp_text.append(word)
+
+	pp_text = tmp_text
+
+	# preprocessing function: preserve *ONLY* NLTK stopwords
 	if options == "onlystop":
-		from nltk.corpus import stopwords
-		stopwords = stopwords.words('english')
 		pp_text = [word for word in pp_text if word in stopwords]
 		return(pp_text)
-        
+       
+	# *step three* (default): remove stopwords
 	# enable an option for preserving stopwords
 	if options != "nostop":
-		from nltk.corpus import stopwords
-		stopwords = stopwords.words('english')
-		custom_stopwords="""like go going gone one would got still really get"""
+		# add additional stopwords, also containing some remainders from
+		# tokenizing
+		custom_stopwords="""like go going gone one would got still really get 's 'll"""
 		stopwords += custom_stopwords.split()
+
 		pp_text = [word for word in pp_text if word not in stopwords]
         
 	return(pp_text)
 
 
+def stats(text_object):
+	import nltk
 
-def stats(text):
-        import nltk
-        tokens = nltk.word_tokenize(text)
-        text = nltk.Text(tokens)
-        lines = raw_text.count('\n')
-        pre_processed_text = preprocess(text)
-        vocab = len(set(pre_processed_text))
-        lex_variety=(float(len(tokens)) / float(vocab))
-        print("object:",input_file)
-        print("total number of lines: " + str(lines))
-        print("total number of words: " + str(len(tokens)))
-        print("total number of unique non-stop words: " + str(vocab))
-        print("total number of dropped stopwords: " + str(len(tokens) - len(pre_processed_text)))
-        print("lexical variety: " + str(round(lex_variety,4)))
+	if isinstance(text_object,nltk.text.Text):
+		token_count = len(text_object)
+		raw_vocab = len(text_object.vocab())
+	else:
+		tokens = nltk.word_tokenize(text_object)
+		text_object = nltk.Text(tokens)
+		token_count = len(text_object)
+		raw_vocab = len(text.vocab())
+
+	pre_processed_text = preprocess(text_object)
+	pp_vocab = len(set(pre_processed_text))
+
+	lex_variety=(float(token_count) / float(raw_vocab))
+	print("total number of words: " + str(token_count))
+	print("total number of unique non-stop words: " + str(raw_vocab))
+	print("total number of dropped stopwords:", token_count - len(pre_processed_text))
+	print("lexical variety: " + str(round(lex_variety,4)))
+
