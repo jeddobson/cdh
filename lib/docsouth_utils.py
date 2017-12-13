@@ -43,7 +43,7 @@ def load_narratives(options="default"):
 					pass
 
 				entry['year'] = year
-				text = open(file).read()
+				text = open(file,encoding="utf-8").read()
 
 				# option "notokenize" will not read and tokenize texts
 				if options != "notokenize":
