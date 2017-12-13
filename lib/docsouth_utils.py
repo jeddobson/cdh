@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 #
 # utility functions for generating material for DHSM manuscript
 #
