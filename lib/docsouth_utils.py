@@ -29,7 +29,8 @@ def load_narratives(options="default"):
 			# deal with the header
 			if row_count != 0:
 				entry=dict()
-				entry['index'] = row_count
+				nehid = '{0:03d}'.format(row_count - 1)
+				entry['nehid'] = 'neh' + str(nehid)
 				file=docsouth_root + "texts/" + row[0].replace(".xml",".txt")
 				entry['file'] = file
 				entry['author'] = row[1]
@@ -55,7 +56,7 @@ def load_narratives(options="default"):
 			row_count = row_count + 1
 	
 	# return list, sorted by year
-	neh_slave_archive = sorted(neh_slave_archive, key=lambda k: k['index'])
+	#neh_slave_archive = sorted(neh_slave_archive, key=lambda k: k['nehid'])
 	return(neh_slave_archive)
 
 
@@ -68,7 +69,8 @@ def load_narratives(options="default"):
 #  - converts all words to lowercase
 #  - removes the above 127 NLTK-defined stopwords
 #  - removes an additional set of stopwords
-#  - optionally preserves only stopwords
+#  - optionally preserves stopwords ("nostop")
+#  - optionally preserves only stopwords ("onlystop")
 #  - optionally stems words
 
 def preprocess(text_object, options = "default"):
@@ -127,6 +129,20 @@ def preprocess(text_object, options = "default"):
         
 	return(pp_text)
 
+# Short function to describe object to our best ability
+def describe(neh_archive_object):
+	if isinstance(neh_archive_object,dict):
+		print("NEHID:",neh_archive_object['nehid'])
+		print("Author:",neh_archive_object['author'])
+		print("Title:",neh_archive_object['title'])
+		print("Publication Year:",neh_archive_object['year'])
+		stats(neh_archive_object['text'])
+	else:	
+		print("ERROR: wrong format!")
+		return(255)
+	return(0)
+
+# some basic statistics 
 
 def stats(text_object):
 	import nltk
@@ -148,4 +164,3 @@ def stats(text_object):
 	print("total number of unique non-stop words: " + str(raw_vocab))
 	print("total number of dropped stopwords:", token_count - len(pre_processed_text))
 	print("lexical variety: " + str(round(lex_variety,4)))
-
