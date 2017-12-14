@@ -139,8 +139,6 @@ def describe(neh_archive_object):
 		stats(neh_archive_object['text'])
 	else:	
 		print("ERROR: wrong format!")
-		return(255)
-	return(0)
 
 # some basic statistics 
 
