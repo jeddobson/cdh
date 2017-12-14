@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+
+
 # load required packages
 import sys, os
 import re
@@ -8,7 +11,7 @@ from nltk import pos_tag, ne_chunk
 from nltk.tokenize import wordpunct_tokenize
 
 # load local library
-sys.path.append("lib")
+sys.path.append("../lib")
 import docsouth_utils
 
 # each dictionary entry in the 'list' object returned by load_narratives 
