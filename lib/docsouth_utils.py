@@ -51,6 +51,9 @@ def load_narratives(options="default"):
 					tokens = nltk.word_tokenize(text)
 					entry['text'] = nltk.Text(tokens)
 
+				if options == "preprocess":
+					entry['text'] = preprocess(entry['text'])
+
 				# add entry
 				neh_slave_archive.append(entry)
 			row_count = row_count + 1
