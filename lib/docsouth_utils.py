@@ -12,11 +12,14 @@
 #
 
 def load_narratives(options="default"):
-	import os
+	import os, sys
 	import csv
 	import nltk
 
-	docsouth_root = "../na-slave-narratives/data/"
+	if sys.argv[0]:
+		docsouth_root=str(os.path.dirname(sys.argv[0])) + "/../na-slave-narratives/data/"
+	else:
+		docsouth_root = "../na-slave-narratives/data/"
 	neh_toc = docsouth_root + "toc.csv"
 
 	# construct a list to store the entire archive
@@ -134,12 +137,18 @@ def preprocess(text_object, options = "default"):
 
 # Short function to describe object to our best ability
 def describe(neh_archive_object):
+	import os
+
 	if isinstance(neh_archive_object,dict):
 		print("NEHID:",neh_archive_object['nehid'])
 		print("Author:",neh_archive_object['author'])
 		print("Title:",neh_archive_object['title'])
 		print("Publication Year:",neh_archive_object['year'])
-		stats(neh_archive_object['text'])
+		print("File:",os.path.basename(neh_archive_object['file']))
+
+		if 'text' in neh_archive_object:
+			stats(neh_archive_object['text'])
+		
 	else:	
 		print("ERROR: wrong format!")
 
