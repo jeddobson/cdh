@@ -16,10 +16,12 @@ def load_narratives(options="default"):
 	import csv
 	import nltk
 
-	if sys.argv[0]:
-		docsouth_root=str(os.path.dirname(sys.argv[0])) + "/../na-slave-narratives/data/"
+	# if using in Jupyter or iPython
+	if sys.argv[0].endswith("__main__.py") or sys.argv[0].endswith("ipython"):
+		docsouth_root = "na-slave-narratives/data/"
 	else:
-		docsouth_root = "../na-slave-narratives/data/"
+		docsouth_root=str(os.path.dirname(sys.argv[0])) + "/../na-slave-narratives/data/"
+
 	neh_toc = docsouth_root + "toc.csv"
 
 	# construct a list to store the entire archive
